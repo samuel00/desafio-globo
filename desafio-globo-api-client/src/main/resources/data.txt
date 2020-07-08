@@ -1,0 +1,17 @@
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f01"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f02"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f03"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f04"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f05"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f06"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f07"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f08"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f09"};
+{"notificationType" : "SUBSCRIPTION_PURCHASED", "subscription": "5793cf6b3fd833521db8c420955e6f00"};
+{"notificationType" : "SUBSCRIPTION_CANCELED", "subscription": "5793cf6b3fd833521db8c420955e6f06"};
+{"notificationType" : "SUBSCRIPTION_CANCELED", "subscription": "5793cf6b3fd833521db8c420955e6f03"};
+{"notificationType" : "SUBSCRIPTION_CANCELED", "subscription": "5793cf6b3fd833521db8c420955e6f08"};
+{"notificationType" : "SUBSCRIPTION_CANCELED", "subscription": "5793cf6b3fd833521db8c420955e6f00"};
+
+{"notificationType" : "SUBSCRIPTION_RESTARTED", "subscription": "5793cf6b3fd833521db8c420955e6f06"};
+{"notificationType" : "SUBSCRIPTION_RESTARTED", "subscription": "5793cf6b3fd833521db8c420955e6f00"}

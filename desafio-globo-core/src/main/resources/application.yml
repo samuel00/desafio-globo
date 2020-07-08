@@ -1,0 +1,63 @@
+spring:
+ profiles:
+  active: docker
+ topic:
+  purchased: SUBSCRIPTION_PURCHASED
+  canceled: SUBSCRIPTION_CANCELED
+  restarted: SUBSCRIPTION_RESTARTED
+
+---
+spring:
+ profiles: test
+ kafka:
+  template:
+   default-topic: SUBSCRIPTION_RESTARTED
+  consumer:
+   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+   value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+   group-id: subscription-events-group
+
+---
+spring:
+ profiles: local
+ kafka:
+  template:
+   default-topic: subscription-default
+  consumer:
+    bootstrap-servers: kafka:9093,kafka:9094
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    group-id: subscription-events-group
+  producer:
+   bootstrap-servers: kafka:9093,kafka:9094
+   key-serializer: org.apache.kafka.common.serialization.StringSerializer
+   value-serializer: org.apache.kafka.common.serialization.StringSerializer
+   properties:
+    acks: all
+    retries: 10
+    retry.backoff.ms: 1000
+  admin:
+   properties:
+    bootstrap.servers: kafka:9093,kafka:9094
+---
+spring:
+ profiles: docker
+ kafka:
+  template:
+   default-topic: subscription-default
+  consumer:
+   bootstrap-servers: kafka:9093,kafka:9094
+   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+   value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+   group-id: subscription-events-group
+  producer:
+   bootstrap-servers: kafka:9093,kafka:9094
+   key-serializer: org.apache.kafka.common.serialization.StringSerializer
+   value-serializer: org.apache.kafka.common.serialization.StringSerializer
+   properties:
+    acks: all
+    retries: 10
+    retry.backoff.ms: 1000
+  admin:
+   properties:
+    bootstrap.servers: kafka:9093,kafka:9094

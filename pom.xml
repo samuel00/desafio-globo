@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>desafio-globo-core</module>
+        <module>desafio-globo-api-rest</module>
+        <module>desafio-globo-kafka-client</module>
+        <module>desafio-globo-aop</module>
+        <module>desafio-globo-api-client</module>
+    </modules>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.1.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>sls.grupo.globo</groupId>
+    <artifactId>desafio-globo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>desafio-globo</name>
+    <description>Demo project for Spring Boot</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <junit.jupiter.version>5.5.2</junit.jupiter.version>
+        <junit.platform.version>1.5.2</junit.platform.version>
+        <!--usuario docker hub -->
+        <docker.username>samuelsantana</docker.username>
+        <docker.image.prefix>${docker.username}</docker.image.prefix>
+        <docker.image.name>${name}</docker.image.name>
+        <docker.kafka.version>1.2</docker.kafka.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.6.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>2.23.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.25.2</version>
+
+                <configuration>
+                    <!--<dockerHost>http://127.0.0.1:2375</dockerHost> -->
+                    <dockerHost>unix:///var/run/docker.sock</dockerHost>
+                    <verbose>true</verbose>
+                    <images>
+
+                        <!--project container -->
+                        <image>
+                            <name>${docker.image.prefix}/${docker.image.name}</name>
+                            <alias>${docker.image.name}</alias>
+                            <build>
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
+
+                                <assembly>
+                                    <descriptorRef></descriptorRef>
+                                    <targetDir>/target</targetDir>
+                                </assembly>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                            </build>
+                            <run>
+                                <ports>
+                                    <port>8080:8080</port>
+                                </ports>
+                                <links>
+                                    <link>kafka:kafka</link>
+                                </links>
+                                <dependsOn>
+                                    <container>kafka</container>
+                                </dependsOn>
+                                <wait>
+                                    <time>
+                                        30000
+                                    </time>
+                                </wait>
+                            </run>
+                        </image>
+
+
+                        <!--project container -->
+                        <image>
+                            <name>${docker.image.prefix}/${docker.image.name}-api-client</name>
+                            <alias>${docker.image.name}-api-client</alias>
+                            <build>
+                                <dockerFileDir>${project.basedir}/${name}-api-client</dockerFileDir>
+                                <assembly>
+                                    <descriptorRef></descriptorRef>
+                                    <targetDir>/target</targetDir>
+                                </assembly>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                            </build>
+                            <run>
+                                <ports>
+                                    <port>8989:8989</port>
+                                </ports>
+                                <links>
+                                    <link>${docker.image.name}:${docker.image.name}</link>
+                                </links>
+                                <dependsOn>
+                                    <container>${docker.image.name}</container>
+                                </dependsOn>
+                            </run>
+                        </image>
+
+                        <!--kafka container -->
+                        <image>
+                            <name>${docker.username}/kafka:${docker.kafka.version}</name>
+                            <alias>kafka</alias>
+                            <build>
+                                <dockerFileDir>${project.basedir}/${name}-script/docker/kafka</dockerFileDir>
+                                <assembly>
+                                    <descriptorRef></descriptorRef>
+                                    <targetDir>/target</targetDir>
+                                </assembly>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                            </build>
+                            <run>
+                                <!--expose port for dn -->
+                                <ports>
+                                    <port>9092:9092</port>
+                                    <port>9093:9093</port>
+                                    <port>9094:9094</port>
+                                    <port>9097:9097</port>
+                                    <port>2181:2181</port>
+                                </ports>
+                                <wait>
+                                    <time>
+                                        20000
+                                    </time>
+                                </wait>
+                            </run>
+                        </image>
+                    </images>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>resource</goal>
+                                <goal>build</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
